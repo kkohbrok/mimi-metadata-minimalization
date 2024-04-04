@@ -1,6 +1,6 @@
-# MIMI Delivery Service
+# MIMI Metadata Minimalization
 
-This is the working area for the MIMI Delivery Service, a proposed document for the [MIMI WG](https://datatracker.ietf.org/group/mimi/about/).
+This is the working area for the MIMI Metadata Minimalization proposal, a proposed document for the [MIMI WG](https://datatracker.ietf.org/group/mimi/about/).
 
 ## Building the Draft
 
@@ -17,4 +17,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/raphaelrobert/mimi-delivery-service/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/kkohbrok/mimi-metadata-minimalization/blob/main/CONTRIBUTING.md).
