@@ -12,14 +12,14 @@ stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
 author:
- -  ins: R. Robert
-    name: Raphael Robert
-    organization: Phoenix R&D
-    email: ietf@raphaelrobert.com
  -  ins: K. Kohbrok
     name: Konrad Kohbrok
     organization: Phoenix R&D
     email: konrad.kohbrok@datashrine.de
+ -  ins: R. Robert
+    name: Raphael Robert
+    organization: Phoenix R&D
+    email: ietf@raphaelrobert.com
 
 --- abstract
 
