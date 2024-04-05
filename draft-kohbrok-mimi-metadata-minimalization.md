@@ -1,7 +1,7 @@
 ---
 title: MIMI Metadata Minimalization (MIMIMI)
 abbrev: MIMIMI
-docname: draft-kohbrok-mimi-metadata-minimalization
+docname: draft-kohbrok-mimi-metadata-minimalization-latest
 category: info
 
 ipr: trust200902
