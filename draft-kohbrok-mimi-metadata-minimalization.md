@@ -81,7 +81,7 @@ details.
 
 # Pseudonymity through credential encryption
 
-Clients use PseudonymousCredentials to represent them in MIMI rooms to hide their 
+Clients use PseudonymousCredentials to represent them in MIMI rooms to hide their
 identities from providers
 
 ~~~ tls
@@ -237,7 +237,7 @@ she creates the connection request. It is later used by Bob to encrypt his own
 connection key if Bob chooses to accept the request.
 
 TODO: The request will likely contain more information such as e.g. an authorization
-token that allows Bob to fetch Alice's KeyPackages. Any such information must also 
+token that allows Bob to fetch Alice's KeyPackages. Any such information must also
 be included in the ConnectionResponse below.
 
 Alice then encrypts the connection request using Bob's connection establishment
