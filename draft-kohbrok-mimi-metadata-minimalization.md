@@ -66,22 +66,22 @@ required to achieve the goals detailed above.
 # Pseudonymization
 
 The main mechanism to hide the user and client identifiers from the hub and
-providers in the context of individual groups and use user- and client-level
+providers in the context of individual groups and use user-level and client-level
 pseudonyms instead.
 
-The main purpose of the pseudonymization scheme described in this document is to
+The purpose of the pseudonymization scheme described in this document is to
 hide metadata from service providers with as little impact as possible on the
-features provided by the base MIMI protocol. In particular, this means that by
+features provided by the base MIMI protocol. This means that by
 default, User and client identifiers are still visible to (other) users and
 their clients.
 
-However, the pseudonymization scheme can also be used to hide a user's identity
+In addition, the pseudonymization scheme can also be used to hide a user's identity
 from other users. See Section {{user-to-user-pseudonymity}} for more details.
 
 # Pseudonymity through credential encryption
 
-To hide their identities from providers, clients use PseudonymousCredentials to
-represent them in MIMI rooms.
+Clients use PseudonymousCredentials to represent them in MIMI rooms to hide their 
+identities from providers
 
 ~~~ tls
 struct {
@@ -92,10 +92,10 @@ struct {
 } PseudonymousCredential
 ~~~
 
-As the name suggests, PseudonymousCredentials don't contain a client's client
-and user ID. Instead, they use two pseudonyms: a user pseudonym (shared by all
-other PseudonymousCredentials of the user's clients in a given room) and a
-client pseudonym (unique for each PseudonymousCredential). Each pseudonym is an
+PseudonymousCredentials don't contain a client's client
+and user ID. Instead, they use two pseudonyms: a user pseudonym shared by all
+other PseudonymousCredentials of the user's clients in a given room and a
+client pseudonym unique for each PseudonymousCredential. Each pseudonym is an
 IdentifierUri made up of a randomly generated UUID and the user's provider's
 domain.
 
@@ -127,21 +127,18 @@ identity_link_key = ExpandWithLabel(connection_key,
 
 See {{connections}} for more details on the connection key.
 
-The fact that the identity link key is unique per pseudonymous credential along
-with the fact that pseudonymous credentials are used in only once (i.e. in one
-room) allows managing the capability to de-pseudonymize a client on a per-room
-level.
+Pseudonyms are specific to each room and client since the identity link key is unique per pseudonymous credential and pseudonymous credentials are used in only once (i.e. in one
+room).
 
 # Identity link key management in rooms
 
-Except in the cases detailed in {{user-to-user-pseudonymity}}, all clients in a
-room MUST be able to decrypt the identity link ciphertext of all other clients
-in the room.
+All clients in a room MUST be able to decrypt the identity link ciphertext of all other clients
+in the room, except in the cases detailed in {{user-to-user-pseudonymity}}.
 
 TODO: The following scheme should be replaced by TreeWrap for FS and PCS. It's a
 simple placeholder for now.
 
-To achieve this, the hub holds encrypted copies of the identity link keys of all
+The hub holds encrypted copies of the identity link keys of all
 clients in the room and updates them as clients get added, removed and updated.
 The identity link keys are encrypted with the room's identity link wrapper key.
 
@@ -181,7 +178,7 @@ struct {
 Existing group members can then decrypt the identity link keys to learn the
 real identities of the added users.
 
-The hub, receiving the commit message, adds the encrypted identity link keys to
+When it receoves a Commit message, the hub adds the encrypted identity link keys to
 the room's state.
 
 Finally, the added user receiving the welcome can then obtain the encrypted
@@ -235,10 +232,9 @@ The `connection_response_key` is a fresh HPKE keypair that Alice generates when
 she creates the connection request. It is later used by Bob to encrypt his own
 connection key if Bob chooses to accept the request.
 
-TODO: The request will likely contain more information s.t. an authorization
-token that allows Bob to fetch Alice's KeyPackages, etc. If we want to include
-more information here, it should also be included in the ConnectionResponse
-below.
+TODO: The request will likely contain more information such as e.g. an authorization
+token that allows Bob to fetch Alice's KeyPackages. Any such information must also 
+be included in the ConnectionResponse below.
 
 Alice then encrypts the connection request using Bob's connection establishment
 public key and sends it to Bob's provider.
@@ -283,7 +279,7 @@ provide identity link keys.
 The use of user and client pseudonyms requires some additional care when
 generating and uploading KeyPackages.
 
-The user and a client pseudonyms in the PseudonymousCredential must be unique
+The user and client pseudonyms in the PseudonymousCredential must be unique
 across groups. For the client pseudonym to be unique across groups, clients can
 generate it randomly for each KeyPackage.
 
