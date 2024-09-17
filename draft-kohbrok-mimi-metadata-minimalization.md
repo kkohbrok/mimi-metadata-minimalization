@@ -75,8 +75,9 @@ features provided by the base MIMI protocol. This means that by
 default, User and client identifiers are still visible to (other) users and
 their clients.
 
-In addition, the pseudonymization scheme can also be used to hide a user's identity
-from other users. See Section {{user-to-user-pseudonymity}} for more details.
+In addition, the pseudonymization scheme can also be used to hide a user's
+identity from other users. See Section {{user-to-user-pseudonymity}} for more
+details.
 
 # Pseudonymity through credential encryption
 
@@ -118,7 +119,8 @@ The `identity_link_ciphertext` is created by encrypting the IdentityLinkTBE,
 which contains the client's real credential, as well as a signature over the
 PseudonymousCredentialTBS using the client credential's signature key.
 
-The identity link key used for encryption is unique per pseudonymous credential. It is derived from the client's connection key.
+The identity link key used for encryption is unique per pseudonymous credential.
+It is derived from the client's connection key.
 
 ~~~ tls
 identity_link_key = ExpandWithLabel(connection_key,
@@ -127,8 +129,9 @@ identity_link_key = ExpandWithLabel(connection_key,
 
 See {{connections}} for more details on the connection key.
 
-Pseudonyms are specific to each room and client since the identity link key is unique per pseudonymous credential and pseudonymous credentials are used in only once (i.e. in one
-room).
+Pseudonyms are specific to each room and client since the identity link key is
+unique per pseudonymous credential and pseudonymous credentials are used in only
+once (i.e. in one room).
 
 # Identity link key management in rooms
 
@@ -207,8 +210,9 @@ Let's call the initiator of the connection establishment Alice and the
 responding user Bob.
 
 At the time of registration with their local provider, Alice and Bob generate an
-HPKE keypair and upload the public key (called the connection establishment public key) to their respective providers. The providers make the keys
-available to all other users without requiring authentication.
+HPKE keypair and upload the public key (called the connection establishment
+public key) to their respective providers. The providers make the keys available
+to all other users without requiring authentication.
 
 To hide Alice's identity from Bob's provider throughout the connection
 establishment process, Alice obtains Bob's connection establishment public key
@@ -239,7 +243,8 @@ be included in the ConnectionResponse below.
 Alice then encrypts the connection request using Bob's connection establishment
 public key and sends it to Bob's provider.
 
-Bob fetches the connection request from his provider and decrypts it using his connection establishment key.
+Bob fetches the connection request from his provider and decrypts it using his
+connection establishment key.
 
 He can inspect Alice's `requester_client_credential` and decide whether to
 accept the request.
@@ -259,9 +264,10 @@ process, he obtains the encrypted identity link keys for Alice's clients and
 verifies that they belong to the same user as the `requester_client_credential`
 in the connection request.
 
-Alice sees that Bob has accepted her connection request by joining the room and
-can decrypt Bob's ConnectionResponse using the connection response key she
-initially included in the connection request.
+Bob joining the room signals to Alice that Bob has accepted her connection
+request. Alice can decrypt Bob's ConnectionResponse in the join message's AAD
+using the connection response key she initially included in the connection
+request.
 
 Both Alice and Bob now share a room and can derive identity link keys for each
 other's clients, which in turn allows them to add each other to rooms.
