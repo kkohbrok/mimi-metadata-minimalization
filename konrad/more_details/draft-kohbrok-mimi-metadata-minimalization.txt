@@ -5,7 +5,7 @@
 Network Working Group                                         K. Kohbrok
 Internet-Draft                                                 R. Robert
 Intended status: Informational                               Phoenix R&D
-Expires: 21 March 2025                                 17 September 2024
+Expires: 27 March 2025                                 23 September 2024
 
 
                  MIMI Metadata Minimalization (MIMIMI)
@@ -20,6 +20,17 @@ Abstract
 
    For now, this document only contains a high-level description of the
    mechanisms involved.
+
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Discussion of this document takes place on the More Instant Messaging
+   Interoperability Working Group mailing list (mimi@ietf.org), which is
+   archived at https://mailarchive.ietf.org/arch/browse/mimi/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/kkohbrok/mimi-metadata-minimalization.
 
 Status of This Memo
 
@@ -36,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 March 2025.
+   This Internet-Draft will expire on 27 March 2025.
 
 Copyright Notice
 
