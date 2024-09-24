@@ -1294,8 +1294,9 @@ once (i.e. in one room).<a href="#section-3-9" class="pilcrow">¶</a></p>
       <h2 id="name-identity-link-key-managemen">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-identity-link-key-managemen" class="section-name selfRef">Identity link key management in rooms</a>
       </h2>
-<p id="section-4-1">All clients in a room MUST be able to decrypt the identity link ciphertext of all other clients
-in the room, except in the cases detailed in <a href="#user-to-user-pseudonymity" class="auto internal xref">Section 6</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">All clients in a room MUST be able to decrypt the <code>identity_link_ciphertext</code> of
+all other clients in the room, except in the cases detailed in
+<a href="#user-to-user-pseudonymity" class="auto internal xref">Section 6</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">TODO: The following scheme should be replaced by TreeWrap for FS and PCS. It's a
 simple placeholder for now.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">The hub holds encrypted copies of the <code>identity_link_key</code>s of all
@@ -1338,9 +1339,10 @@ real identities of the added users.<a href="#section-4.1-7" class="pilcrow">¶</
 <p id="section-4.1-8">When it receoves a Commit message, the hub adds the encrypted <code>identity_link_key</code>s to
 the room's state.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
 <p id="section-4.1-9">Finally, the added user receiving the welcome can then obtain the encrypted
-<code>identity_link_key</code>s from the hub and decrypt them using the identity link
-wrapper key from the extension and use the decrypted <code>identity_link_key</code>s to
-decrypt the identity link ciphertexts of all other clients in the room.<a href="#section-4.1-9" class="pilcrow">¶</a></p>
+<code>identity_link_key</code>s from the hub and decrypt them using the
+<code>identity_link_wrapper_key</code> from the extension and use the decrypted
+<code>identity_link_key</code>s to decrypt the <code>identity_link_ciphertexts</code> of all other
+clients in the room.<a href="#section-4.1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="join-flow">
@@ -1348,10 +1350,11 @@ decrypt the identity link ciphertexts of all other clients in the room.<a href="
         <h3 id="name-join-flow">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-join-flow" class="section-name selfRef">Join flow</a>
         </h3>
-<p id="section-4.2-1">Members joining a room through the join flow need to obtain the identity link
-wrapper key out of band. The key can be shared any other group member.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">TODO: When defining features such as join/invitation links the identity link
-wrapper key should be included in the link.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">Members joining a room through the join flow need to obtain the
+<code>identity_link_wrapper_key</code> out of band. The key can be shared any other group
+member.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">TODO: When defining features such as join/invitation links the
+<code>identity_link_wrapper_key</code> should be included in the link.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">When joining the group, the joining client MUST include its own encrypted
 <code>identity_link_key</code> in the AAD of the external commit message via the AddAAD
 struct.<a href="#section-4.2-3" class="pilcrow">¶</a></p>

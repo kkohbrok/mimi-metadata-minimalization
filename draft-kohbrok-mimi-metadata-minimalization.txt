@@ -180,9 +180,9 @@ Table of Contents
 
 4.  Identity link key management in rooms
 
-   All clients in a room MUST be able to decrypt the identity link
-   ciphertext of all other clients in the room, except in the cases
-   detailed in Section 6.
+   All clients in a room MUST be able to decrypt the
+   identity_link_ciphertext of all other clients in the room, except in
+   the cases detailed in Section 6.
 
    TODO: The following scheme should be replaced by TreeWrap for FS and
    PCS.  It's a simple placeholder for now.
@@ -230,18 +230,18 @@ Table of Contents
 
    Finally, the added user receiving the welcome can then obtain the
    encrypted identity_link_keys from the hub and decrypt them using the
-   identity link wrapper key from the extension and use the decrypted
-   identity_link_keys to decrypt the identity link ciphertexts of all
+   identity_link_wrapper_key from the extension and use the decrypted
+   identity_link_keys to decrypt the identity_link_ciphertexts of all
    other clients in the room.
 
 4.2.  Join flow
 
    Members joining a room through the join flow need to obtain the
-   identity link wrapper key out of band.  The key can be shared any
+   identity_link_wrapper_key out of band.  The key can be shared any
    other group member.
 
    TODO: When defining features such as join/invitation links the
-   identity link wrapper key should be included in the link.
+   identity_link_wrapper_key should be included in the link.
 
    When joining the group, the joining client MUST include its own
    encrypted identity_link_key in the AAD of the external commit message
