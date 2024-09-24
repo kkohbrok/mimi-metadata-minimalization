@@ -65,95 +65,229 @@ required to achieve the goals detailed above.
 
 # Pseudonymization
 
-The main mechanism to hide the user and client identifiers from providers in the
-context of individual groups and use user- and client-level pseudonyms instead.
+The main mechanism to hide the user and client identifiers from the hub and
+providers in the context of individual groups and use user-level and client-level
+pseudonyms instead.
 
-User and client identifiers are still visible to (other) users and their clients
-and are still used for discovery and initial establishment of connections.
+The purpose of the pseudonymization scheme described in this document is to
+hide metadata from service providers with as little impact as possible on the
+features provided by the base MIMI protocol. This means that by
+default, User and client identifiers are still visible to (other) users and
+their clients.
 
-# Connections
+In addition, the pseudonymization scheme can also be used to hide a user's
+identity from other users. See Section {{user-to-user-pseudonymity}} for more
+details.
 
-A connection is a mutually agreed-upon relation betwen two users. After a user
-has discovered another user using their identifier, they can send a connection
-request to that user.
+# Pseudonymity through credential encryption
 
-To hide the initiator's identity from the responding user's provider, users
-provide an HPKE key that the initiator fetches upon discovery and under which it
-encrypts a connection request under.
+Clients use PseudonymousCredentials to represent them in MIMI rooms to hide their
+identities from providers
 
-Before sending a connection request to a user, the initiator creates a group
-which contains all of its clients. Connection requests then contain information
-required for the responding user to join that group, as well as two values:
+~~~ tls
+struct {
+  IdentifierUri client_pseudonym;
+  IdentifierUri user_pseudonym;
+  opaque signature_public_key;
+  opaque identity_link_ciphertext<V>;
+} PseudonymousCredential
+~~~
 
-- a connection key required to derive keys to link the owners pseudonyms to
-  identifiers
-- a connection (bearer) token which authorizes the connected user to fetch the
-  owner's KeyPackages.
+PseudonymousCredentials don't contain a client's client
+and user ID. Instead, they use two pseudonyms: a user pseudonym shared by all
+other PseudonymousCredentials of the user's clients in a given room and a
+client pseudonym unique for each PseudonymousCredential. Each pseudonym is an
+IdentifierUri made up of a randomly generated UUID and the user's provider's
+domain.
 
-If the responder decides to accept the request, it joins the group via external
-commit and sends the connection key and connection token to the initiator via
-that group.
+~~~ tls
+struct {
+  IdentifierUri client_pseudonym;
+  IdentifierUri user_pseudonym;
+  opaque signature_public_key;
+} PseudonymousCredentialTBS
 
-# Encrypted Credentials
+struct {
+  /* SignWithLabel(., "PseudonymousCredentialTBS",
+    PseudonymousCredentialTBS) */
+  opaque pseudonymous_credential_signature<V>;
+  Credential client_credential;
+} IdentityLinkTBE
+~~~
 
-Each leaf credential of a client contains a plaintext part and a ciphertext
-part.
+The `identity_link_ciphertext` is created by encrypting the IdentityLinkTBE,
+which contains the client's real credential, as well as a signature over the
+PseudonymousCredentialTBS using the client credential's signature key.
 
-The plaintext part contains two unique pseudonyms: a user pseudonym (shared by
-all other leaves of the user's clients in that group), a client pseudonym and a
-signature key.
+The `identity_link_key` used for encryption is unique per pseudonymous credential.
+It is derived from the client's `connection_key`.
 
-The ciphertext part contains the client's real credential, as well as a
-signature over the plaintext part using the client's real credential.
+~~~ tls
+identity_link_key = ExpandWithLabel(connection_key,
+  "IdentityLinkKey", PseudonymousCredentialTBS, KDF.Nh)
+~~~
 
-The key to decrypt the ciphertext part is derived from the connection key using
-the leaf's pseudonyms as context.
+See {{connections}} for more details on the `connection_key`.
 
-Users connected with the leaf's owner can derive that key to verify the
-signature over the plaintext and distribute the decryption key to the group in
-the context of which they want to use the KeyPackage.
+Pseudonyms are specific to each room and client since the `identity_link_key` is
+unique per pseudonymous credential and pseudonymous credentials are used in only
+once (i.e. in one room).
 
-# Joining groups
+# Identity link key management in rooms
 
-When clients join a group (either because it was added, or because it joined via
-external commit), other group members must be able to fully authenticate the
-joining client, for which they require the key to decrypt the ciphertext in the
-client's credential.
+All clients in a room MUST be able to decrypt the identity link ciphertext of all other clients
+in the room, except in the cases detailed in {{user-to-user-pseudonymity}}.
+
+TODO: The following scheme should be replaced by TreeWrap for FS and PCS. It's a
+simple placeholder for now.
+
+The hub holds encrypted copies of the `identity_link_key`s of all
+clients in the room and updates them as clients get added, removed and updated.
+The `identity_link_key`s are encrypted with the room's `identity_link_wrapper_key`.
+
+The `identity_link_wrapper_key` is freshly generated by the room's creator and
+does not change throughout the lifetime of the group.
+
+The `identity_link_wrapper_key` is distributed to new participants as they join
+the room.
 
 ## Add flow
 
-When adding a user(s) to a group via a Welcome message, the adding user must do
-two things: On the one hand, it must provide the new user(s) with the key
-material required to authenticate existing group members. On the other hand, it
-must provide the existing group members with the key material required to
-authenticate the new user(s).
+If a group member adds a new user, the adder MUST include a
+IdentityLinkExtension in the Welcome's GroupInfoExtensions.
 
-For the new user(s), the key material can be transported along with the Welcome,
-e.g. via a GroupInfo extension.
+~~~ tls
+struct {
+  opaque identity_link_wrapper_key<V>;
+} IdentityLinkExtension
+~~~
 
-For existing users, the key material must be transported in some other way, e.g.
-via a custom proposal (encrypted under an exporter).
+The adder MUST also include the encrypted `identity_link_key` of all added users
+in the AAD of the commit message. The order of the encrypted `identity_link_key`s
+in the AAD MUST match the order of the Add proposals in the Commit message.
+
+Note that this requires the adder to have a connection with each added user as
+specified in {{connections}}.
+
+TODO: Note here that the sender MUST use the SafeAAD as defined in the extension
+doc.
+
+~~~ tls
+struct {
+  opaque encrypted_identity_link_keys<V>;
+} AddAAD
+~~~
+
+Existing group members can then decrypt the `identity_link_key`s to learn the
+real identities of the added users.
+
+When it receoves a Commit message, the hub adds the encrypted `identity_link_key`s to
+the room's state.
+
+Finally, the added user receiving the welcome can then obtain the encrypted
+`identity_link_key`s from the hub and decrypt them using the identity link
+wrapper key from the extension and use the decrypted `identity_link_key`s to
+decrypt the identity link ciphertexts of all other clients in the room.
 
 ## Join flow
 
-When a user joins a group via external commit, it needs an existing group member
-to provide the key material necessary to authenticate existing group members.
+Members joining a room through the join flow need to obtain the identity link
+wrapper key out of band. The key can be shared any other group member.
 
-The new group member can either wait for a member to come online and provide the
-key material, or the key material can be shared out of band prior to the new
-user joining.
+TODO: When defining features such as join/invitation links the identity link
+wrapper key should be included in the link.
 
-The new user can then send the key material necessary to authenticate it to
-existing group members (e.g. via a custom proposal encrypted under an exporter).
+When joining the group, the joining client MUST include its own encrypted
+`identity_link_key` in the AAD of the external commit message via the AddAAD
+struct.
+
+# Connections
+
+A connection is a mutually agreed-upon relation betwen two users. Users can
+establish connections between one-another through the following process.
+
+Let's call the initiator of the connection establishment Alice and the
+responding user Bob.
+
+At the time of registration with their local provider, Alice and Bob generate an
+HPKE keypair and upload the public key (called the connection establishment
+public key) to their respective providers. The providers make the keys available
+to all other users without requiring authentication.
+
+To hide Alice's identity from Bob's provider throughout the connection
+establishment process, Alice obtains Bob's connection establishment public key
+from Bob's provider.
+
+Alice now creates a new conversation with her local provider as hub and adds
+all of her clients to that conversation. She then compiles the following
+information into a connection request:
+
+~~~ tls
+struct {
+  Credential requester_client_credential;
+  opaque connection_room_id<V>;
+  opaque connection_room_identity_link_wrapper_key<V>;
+  opaque requester_connection_key<V>;
+  opaque connection_response_key<V>;
+} ConnectionRequest
+~~~
+
+The `connection_response_key` is a fresh HPKE keypair that Alice generates when
+she creates the connection request. It is later used by Bob to encrypt his own
+`connection_key` if Bob chooses to accept the request.
+
+TODO: The request will likely contain more information such as e.g. an authorization
+token that allows Bob to fetch Alice's KeyPackages. Any such information must also
+be included in the ConnectionResponse below.
+
+Alice then encrypts the connection request using Bob's connection establishment
+public key and sends it to Bob's provider.
+
+Bob fetches the connection request from his provider and decrypts it using his
+connection establishment key.
+
+He can inspect Alice's `requester_client_credential` and decide whether to
+accept the request.
+
+If Bob accepts, he creates a connection response:
+
+~~~ tls
+struct {
+  opaque responder_connection_key<V>;
+} ConnectionResponse
+~~~
+
+Bob then follows the join flow for the room with the `connection_room_id`,
+including the ConnectionResponse encrypted under the `connection_response_key`
+in the join message's (i.e. the external commit's) AAD. As part of that
+process, he obtains the encrypted `identity_link_key`s for Alice's clients and
+verifies that they belong to the same user as the `requester_client_credential`
+in the connection request.
+
+Bob joining the room signals to Alice that Bob has accepted her connection
+request. Alice can decrypt Bob's ConnectionResponse in the join message's AAD
+using the connection response key she initially included in the connection
+request.
+
+Both Alice and Bob now share a room and can derive `identity_link_key`s for each
+other's clients, which in turn allows them to add each other to rooms.
+
+# User-to-user pseudonymity
+
+In some cases, users may want to communicate with each other without revealing
+their real identities to one-another. Room policy can thus specify the extent
+to which clients are required to provide `identity_link_key`s. For example,
+`identity_link_key`s might not be allowed at all, or only admins are required to
+provide `identity_link_key`s.
 
 # KeyPackages
 
 The use of user and client pseudonyms requires some additional care when
 generating and uploading KeyPackages.
 
-Leaf credentials contain a user and a client pseudonym, both of which must be
-unique across groups. For the client pseudonym to be unique across groups,
-clients can generate it randomly for each KeyPackage.
+The user and client pseudonyms in the PseudonymousCredential must be unique
+across groups. For the client pseudonym to be unique across groups, clients can
+generate it randomly for each KeyPackage.
 
 However, to allow the hub to associate a set of leaves with a user, the user
 pseudonym must be consistent across the leaves in that group. This means that
