@@ -135,8 +135,9 @@ once (i.e. in one room).
 
 # Identity link key management in rooms
 
-All clients in a room MUST be able to decrypt the identity link ciphertext of all other clients
-in the room, except in the cases detailed in {{user-to-user-pseudonymity}}.
+All clients in a room MUST be able to decrypt the `identity_link_ciphertext` of
+all other clients in the room, except in the cases detailed in
+{{user-to-user-pseudonymity}}.
 
 TODO: The following scheme should be replaced by TreeWrap for FS and PCS. It's a
 simple placeholder for now.
@@ -185,17 +186,19 @@ When it receoves a Commit message, the hub adds the encrypted `identity_link_key
 the room's state.
 
 Finally, the added user receiving the welcome can then obtain the encrypted
-`identity_link_key`s from the hub and decrypt them using the identity link
-wrapper key from the extension and use the decrypted `identity_link_key`s to
-decrypt the identity link ciphertexts of all other clients in the room.
+`identity_link_key`s from the hub and decrypt them using the
+`identity_link_wrapper_key` from the extension and use the decrypted
+`identity_link_key`s to decrypt the `identity_link_ciphertexts` of all other
+clients in the room.
 
 ## Join flow
 
-Members joining a room through the join flow need to obtain the identity link
-wrapper key out of band. The key can be shared any other group member.
+Members joining a room through the join flow need to obtain the
+`identity_link_wrapper_key` out of band. The key can be shared any other group
+member.
 
-TODO: When defining features such as join/invitation links the identity link
-wrapper key should be included in the link.
+TODO: When defining features such as join/invitation links the
+`identity_link_wrapper_key` should be included in the link.
 
 When joining the group, the joining client MUST include its own encrypted
 `identity_link_key` in the AAD of the external commit message via the AddAAD
