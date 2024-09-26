@@ -1,0 +1,228 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-09-26T00:10:18.737128+00:00",
+  "repo": "kkohbrok/mimi-metadata-minimalization",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOLm6Uhc55ZuSh",
+      "title": "Add details",
+      "url": "https://github.com/kkohbrok/mimi-metadata-minimalization/pull/1",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "kkohbrok"
+      ],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-08-26T07:31:14Z",
+      "updatedAt": "2024-09-24T07:41:02Z",
+      "baseRepository": "kkohbrok/mimi-metadata-minimalization",
+      "baseRefName": "main",
+      "baseRefOid": "86b98915d1e049550607da219a1465b7f8ea8e0b",
+      "headRepository": "kkohbrok/mimi-metadata-minimalization",
+      "headRefName": "konrad/more_details",
+      "headRefOid": "7536c5d5731c650e00c65c8b492b453510440964",
+      "closedAt": "2024-09-24T07:41:02Z",
+      "mergedAt": "2024-09-24T07:41:02Z",
+      "mergedBy": "kkohbrok",
+      "mergeCommit": {
+        "oid": "15417328d12c7337eb3fc9f612efbb6dc92ca3b3"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOLm6Uhc6It-m1",
+          "commit": {
+            "abbreviatedOid": "665a3e1"
+          },
+          "author": "raphaelrobert",
+          "authorAssociation": "NONE",
+          "state": "CHANGES_REQUESTED",
+          "body": "Thanks I leaft a few suggestions and comments",
+          "createdAt": "2024-09-10T20:56:36Z",
+          "updatedAt": "2024-09-11T10:12:47Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nproviders in the context of individual groups and use user-level and client-level\r\n```",
+              "createdAt": "2024-09-10T20:56:36Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 10,
+              "body": "```suggestion\r\nThe purpose of the pseudonymization scheme described in this document is to\r\n```",
+              "createdAt": "2024-09-10T20:57:08Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "```suggestion\r\nfeatures provided by the base MIMI protocol. This means that by\r\n```",
+              "createdAt": "2024-09-10T20:57:43Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\nIn addition, the pseudonymization scheme can also be used to hide a user's identity\r\n```",
+              "createdAt": "2024-09-10T20:59:02Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 22,
+              "body": "```suggestion\r\nClients use PseudonymousCredentials to represent them in MIMI rooms to hide their \r\nidentities from providers\r\n```",
+              "createdAt": "2024-09-10T21:00:01Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 33,
+              "body": "```suggestion\r\nPseudonymousCredentials don't contain a client's client\r\n```",
+              "createdAt": "2024-09-10T21:00:24Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 36,
+              "body": "```suggestion\r\nand user ID. Instead, they use two pseudonyms: a user pseudonym shared by all\r\nother PseudonymousCredentials of the user's clients in a given room and a\r\nclient pseudonym unique for each PseudonymousCredential. Each pseudonym is an\r\n```",
+              "createdAt": "2024-09-10T21:02:21Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 59,
+              "body": "It improves clarity when you repeat the name of keys in prose by using the identifier name.\r\n\r\n```suggestion\r\nThe identity link key `identity_link_key` used for encryption is unique per pseudonymous credential. It is derived from the client's connection key `connection_key`.\r\n```",
+              "createdAt": "2024-09-10T21:04:56Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 71,
+              "body": "```suggestion\r\nPseudonyms are specific to each room and client since the identity link key is unique per pseudonymous credential and pseudonymous credentials are used in only once (i.e. in one\r\nroom).\r\n```",
+              "createdAt": "2024-09-11T10:00:05Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 77,
+              "body": "```suggestion\r\nAll clients in a room MUST be able to decrypt the identity link ciphertext of all other clients\r\nin the room, except in the cases detailed in {{user-to-user-pseudonymity}}.\r\n```",
+              "createdAt": "2024-09-11T10:01:04Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 82,
+              "body": "```suggestion\r\nThe hub holds encrypted copies of the identity link keys of all\r\n```",
+              "createdAt": "2024-09-11T10:01:51Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "Using the identifier names of keys in this paragraph would make things more clear",
+              "createdAt": "2024-09-11T10:02:52Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 142,
+              "body": "```suggestion\r\nWhen it receoves a Commit message, the hub adds the encrypted identity link keys to\r\nthe room's state.\r\n```",
+              "createdAt": "2024-09-11T10:05:28Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 227,
+              "body": "```suggestion\r\nTODO: The request will likely contain more information such as e.g. an authorization\r\ntoken that allows Bob to fetch Alice's KeyPackages. Any such information must also \r\nbe included in the ConnectionResponse below.\r\n```",
+              "createdAt": "2024-09-11T10:09:31Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 252,
+              "body": "What does \"sees\" mean? Is it Alice the user or Alice the client?",
+              "createdAt": "2024-09-11T10:11:07Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            },
+            {
+              "originalPosition": 282,
+              "body": "```suggestion\r\nThe user and client pseudonyms in the PseudonymousCredential must be unique\r\n```",
+              "createdAt": "2024-09-11T10:12:22Z",
+              "updatedAt": "2024-09-11T10:12:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOLm6Uhc6JmRMJ",
+          "commit": {
+            "abbreviatedOid": "1ec568f"
+          },
+          "author": "kkohbrok",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "Thanks for the review and the proposed changes!",
+          "createdAt": "2024-09-17T06:36:35Z",
+          "updatedAt": "2024-09-17T06:47:10Z",
+          "comments": [
+            {
+              "originalPosition": 59,
+              "body": "I generally agree. However, in this case I'd advocate for using either the name or the identifier since they're pretty much the same.\r\n\r\nOn a slightly different note, having an \"identifier\" maybe isn't great in the first place, since it's easily confused with a field name of a struct.",
+              "createdAt": "2024-09-17T06:36:35Z",
+              "updatedAt": "2024-09-17T06:47:10Z"
+            },
+            {
+              "originalPosition": 252,
+              "body": "The event is detected by Alice the client and can be communicated to Alice the user. I'll clarify.",
+              "createdAt": "2024-09-17T06:39:09Z",
+              "updatedAt": "2024-09-17T06:47:10Z"
+            },
+            {
+              "originalPosition": 90,
+              "body": "Again, if they're exactly the same I don't think it makes much of a difference. In the case of the \"identity link wapper key\" we haven't even defined an identifier to use.",
+              "createdAt": "2024-09-17T06:41:12Z",
+              "updatedAt": "2024-09-17T06:47:10Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
